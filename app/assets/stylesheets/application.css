@@ -108,20 +108,24 @@
    /* width: 960px;
    margin-left: 10px;  */
  }
- .blurb { /* blurb outputs */
-   padding-top: 10px;
-   padding-bottom: 10px;
-   font-size: 18px;
- }
  thead {
    font-weight: bold;
  }
  table, td, th {
    border:             2px solid black ;      /* Delete if no border needed */
    padding: 2px 8px 2px 8px;
+   font-family: 'Arial Narrow Bold';
  }
  th {
    font-weight: bold;
+   min-width: 110px;
+ }
+ 
+ /* .abn {
+  min-width: 110px;
+ } */
+ td {
+   font-size: 14px;
  }
  .hero {
    padding: 22px 80px 66px 80px;
@@ -139,6 +143,15 @@
    /* text-decoration: none; */
    display: inline-block;
  }
+
+td a:link, td a:visited {
+  /* background-color: #f44336; */
+  color: rgb(0, 0, 0);
+  /* padding: 14px 25px; */
+  /* text-align: center; = baaaaad! */
+  text-decoration: none;
+  display: inline-block;
+}
  
  a:hover, a:active {
    /* background-color: red; */

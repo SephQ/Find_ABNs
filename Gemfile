@@ -59,9 +59,12 @@ gem 'open_uri_redirections'
 # https://github.com/caxlsx/caxlsx_rails/issues/21 In your gemfile require axlsx 2.0.1 before axlsx_rails:
 # gem 'axlsx', '~> 2.0.1'
 # gem 'axlsx_rails'
-#https://github.com/caxlsx/caxlsx_rails
+# https://github.com/caxlsx/caxlsx_rails
 gem 'caxlsx'
 gem 'caxlsx_rails'
+# https://github.com/collectiveidea/delayed_job (To avoid Heroku timeouts, not using Sidekiq because Windows-incompatible)
+# gem 'delayed_job_active_record'
+# gem 'daemons'
 
 # https://serveanswer.com/questions/heroku-router-at-error-code-h10-desc-app-crashed-method
 # Fixing Heroku app crashed error with bootsnap

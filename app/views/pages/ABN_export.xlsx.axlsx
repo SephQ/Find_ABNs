@@ -1,6 +1,7 @@
 wb = xlsx_package.workbook
 wb.add_worksheet(name: 'ABNs') do |sheet|
-    sheet.add_row ['Name', 'ABN', 'State', 'Postcode']
+    bold = wb.styles.add_style( :b => true )
+    sheet.add_row ['Name', 'ABN', 'State', 'Postcode'], :style => bold
     @allabns.each do |r|
       sheet.add_row r
     end

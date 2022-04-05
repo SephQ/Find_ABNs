@@ -1,9 +1,16 @@
 class PagesController < ApplicationController
   def home
-    @splist = params[:list] ? params[:list].split(/\s+/) : []
+    # if params[:list] && params[:list] == "DONE"
+    #   #Skip - already taken in data and have now finished getting ABNS into @allabns
+    # else
+    @sptext = params[:list] ? params[:list] : ""
+    @splist = @sptext.split(/[\r\n]+/)    # An array of line-separated strings from input
+    p @splist
     @url0 = "https://abr.business.gov.au/Search/ResultsActive?SearchText="
     @allabns = []
     abnlist(@splist) if @splist != []
+    # https://stackoverflow.com/questions/12956661/controller-action-to-delayed-job
+    # PagesController.delay.abnlist(@splist) if @splist != []
     # https://github.com/caxlsx/caxlsx_rails
     # respond_to do |format|
     #   format.xlsx {
@@ -11,6 +18,7 @@ class PagesController < ApplicationController
     # }
     # end
     # root_path(format: "xlsx")
+    # end
   end
   def ABN_export
     @allabns = params[:abns] ? eval(params[:abns]) : []
@@ -29,7 +37,11 @@ class PagesController < ApplicationController
     end
   end
   def abnlist(list)
-    list.map{|i| @num = i
+  # def self.abnlist(list)
+    list.map{|i| i = i[/\d+/] if i[/Owners|Trust/i] && i[/\d+/] # Long names including 'The Owners of...' are reduced to just numbers
+      prefix_rgx = /^((SP|DP|UP|CTS|SC)|(Strata|Units?|Deposited|Community) *(Plan|Title( Scheme)?|Scheme)) *(?=\d)/i
+      @num = i.gsub(prefix_rgx, '')
+      p [i,@num,@url0]
       url = @url0 + @num
       url2 = @url0 + (@num[/DP|UP/] ? @num.gsub(/DP|UP/,'') : 'SP' + @num)
       url3 = @url0 + 'PLAN' + @num
