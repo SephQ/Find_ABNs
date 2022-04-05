@@ -240,9 +240,6 @@ DEPENDENCIES
   debug
   importmap-rails
   jbuilder
-  net-imap
-  net-pop
-  net-smtp
   nokogiri
   open-uri
   open_uri_redirections

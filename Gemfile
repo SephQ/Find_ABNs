@@ -65,9 +65,9 @@ gem 'caxlsx_rails'
 
 # https://serveanswer.com/questions/heroku-router-at-error-code-h10-desc-app-crashed-method
 # Fixing Heroku app crashed error with bootsnap
-gem 'net-smtp', require: false
-gem 'net-pop', require: false
-gem 'net-imap', require: false
+# gem 'net-smtp', require: false
+# gem 'net-pop', require: false
+# gem 'net-imap', require: false
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
