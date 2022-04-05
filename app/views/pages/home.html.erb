@@ -1,0 +1,38 @@
+<section class="container">
+  <p><%= image_tag 'SES_image_laptop.png' %></p>
+  <p><h1>Find ABNs for a list of Strata Plans</h1></p>
+  <p>Enter line-separated list of Strata Plan numbers/Building Names:</p>
+  <p>(Please be prepared to wait long periods to allow ABN searching of long lists. Do NOT press the button twice, the page will not react until the ABN search is done which could take ~5 minutes per 100 plans)</p>
+  <%# </br> %>
+  <%= form_with method: :get do |f| %>
+    <p>
+        <%= f.label :list %><br>
+        <%= f.text_area :list, :rows => 20 %>
+    </p>
+    <p>
+        <%= f.submit 'Find ABNs' %>
+    </p>
+  <% end %>
+  <p><%#= render html: @splist %></p>
+  <% if false %>
+    <p><%= render html: @abns %></p>
+    <% p @allabns %>
+    <p><%= render html: @allabns %></p>
+  <% end %>
+  <%# </br> %>
+  <p>Table will appear below once the page reloads after clicking 'Find ABNs'. Please be patient.</p>
+  <p><table><tbody><tr><th>Name</th><th>ABN</th><th>State</th><th>Postcode</th></tr>
+    <% @allabns.each do |r| %>
+      <tr>
+        <% r.each do |c| %>
+          <td><%= c %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody></table></p>
+  </br>
+  <p><%= link_to "Export ABNs as spreadsheet", ABN_export_path(format: "xlsx", abns: @allabns.to_s ) %></p>
+  <p><%#= link_to "Export ABNs as spreadsheet", root_path(export,format: "xlsx") %></p>
+  <p><%#= link_to("Export ABNs as spreadsheet", :controller => "pages_controller", :action => "export") %></p>
+  <p>The above link allows you to export the table to excel (once generated).</p>
+</section>
