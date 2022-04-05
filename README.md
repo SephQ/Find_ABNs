@@ -1,24 +1,5 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+* Add a list of Strata Plan numbers or building names into an input text field then click "Find ABNs" to search for these on the ABN Lookup website. Returns a table of possible matches.
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* You can export this table to Excel format to allow easy manipulation, since HTML tables are not easy to import into Excel.
