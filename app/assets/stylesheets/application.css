@@ -161,3 +161,7 @@ td a:link, td a:visited {
    text-decoration: none;
    /* background-color: cyan; */
  }
+
+ .whitetext{
+   color: white;
+ }

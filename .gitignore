@@ -4,6 +4,9 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+# SF 220408 - Ignore yml environmental variables for GMail login
+/config/local_env.yml
+
 # Ignore bundler config.
 /.bundle
 

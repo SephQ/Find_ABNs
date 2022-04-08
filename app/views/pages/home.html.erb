@@ -11,6 +11,10 @@
         <%= f.text_area :list, :rows => 8, :value => @sptext %><%# 20, now 8 because of heroku timeouts meaning 8 rows is max. %>
     </p>
     <p>
+      <%= f.label 'Email for sending longer results:' %></p>
+      <p><%= f.text_field :email, :value => @email, :size => 50 %>
+    </p>
+    <p>
         <%= f.submit 'Find ABNs' %>
     </p>
   <% end %>
@@ -21,6 +25,7 @@
     <p><%= render html: @allabns %></p>
   <% end %>
   <%# </br> %>
+  <% p " home    view     @allabns  below ", @allabns %>
   <p>Table will appear below once the page reloads after clicking 'Find ABNs'. Please be patient (up to 30 seconds of ABN searching before page reloads with output).</p>
   <p><table><tbody><tr><th>Name</th><th class="ABN">ABN</th><th>State</th><th>Postcode</th></tr>
     <% @allabns.each do |r| %>
@@ -39,3 +44,5 @@
   <p><%#= link_to("Export ABNs as spreadsheet", :controller => "pages_controller", :action => "export") %></p>
   <p>The above link allows you to export the table to Excel (once generated).</p>
 </section>
+<%# Really naive idea to avoid background job for long lists. Trying to get the last command in the view to organise emailing the results once the server completes the search for ABNs %>
+<% AbnMailer.email_abns( @email,'test email for ABN', abnlist(@splist)).deliver_now if @splist != [] && @splist.size >= 14 %>

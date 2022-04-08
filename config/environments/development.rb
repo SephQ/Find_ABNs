@@ -59,6 +59,57 @@ Rails.application.configure do
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
+  # SF 220408 - adding Email support
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.default_url_options = { 
+  # :host => '<your_url_here>', 
+  :host => 'localhost:3000', 
+  :protocol => 'http'
+  }
+  config.action_mailer.smtp_settings = {
+  :address => 'smtp.gmail.com',
+  # :port => 601,
+  :port => 587,
+  :user_name => ENV["GMAIL_USERNAME"], # "ses.abns@gmail.com"
+  :password => ENV["GMAIL_PW"],
+  :authentication => 'plain',
+  :enable_starttls_auto => true
+  }
+  # Allow less secure apps: ON
+  # On May 30, 2022, this setting will no longer be available. - will need 2-step verification and an app password
+
+  # https://guides.rubyonrails.org/action_mailer_basics.html
+  # config.action_mailer.delivery_method = :sendmail
+  # config.action_mailer.default_url_options = { 
+  # :host => 'localhost:3000', 
+  # :protocol => 'http'
+  # }
+  # config.action_mailer.delivery_method = :sendmail
+  # # Defaults to:
+  # # config.action_mailer.sendmail_settings = {
+  # #   location: '/usr/sbin/sendmail',
+  # #   arguments: '-i'
+  # # }
+  config.action_mailer.perform_deliveries = true
+
+  # Outlook attempt
+  # https://www.workthecode.com/tutorials/send-email-via-office-365-exchange-online-from-actionmailer-in-rails/
+  # WARNING: The email address the mailer sends from must match the email address used in the ActionMailer configuration's user_name field. If this doesn't match, the message will be rejected by the Exchange Online SMTP service.
+  # Net::ReadTimeout with #<Socket:(closed)> -> added ssl: true, # https://www.redmine.org/boards/1/topics/46305
+  # SSL_connect returned=1 errno=0 peeraddr=52.98.14.146:587 state=error: wrong version number -> give up
+  # config.action_mailer.smtp_settings = {
+  #   address:              "smtp.office365.com",
+  #   port:                 587,
+  #   domain:               "strataenergyservices.com.au",
+  #   ssl: true,       # Added to fix Net::ReadTimeout https://www.redmine.org/boards/1/topics/46305
+  #   user_name:            "sfreer@strataenergyservices.com.au",
+  #   password:             "Mi!!Q122",
+  #   authentication:       :login,
+  #   enable_starttls_auto: true
+  # }
+  # config.action_mailer.delivery_method = :smtp
+  config.action_mailer.raise_delivery_errors = true # Temporary
+
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 
