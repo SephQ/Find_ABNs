@@ -70,9 +70,11 @@ Rails.application.configure do
   :address => 'smtp.gmail.com',
   # :port => 601,
   :port => 587,
+  :domain => "gmail.com", # SF 220411 https://stackoverflow.com/questions/25872389/rails-4-how-to-correctly-configure-smtp-settings-gmail
   :user_name => ENV["GMAIL_USERNAME"], # "ses.abns@gmail.com"
   :password => ENV["GMAIL_PW"],
-  :authentication => 'plain',
+  # :authentication => 'plain',
+  :authentication => 'login', # SF 220411 https://stackoverflow.com/questions/25872389/rails-4-how-to-correctly-configure-smtp-settings-gmail
   :enable_starttls_auto => true
   }
   # Allow less secure apps: ON

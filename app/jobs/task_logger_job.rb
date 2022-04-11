@@ -1,14 +1,17 @@
-module PagesHelper
-  
-  def ABN_export
-    @allabns = params[:abns] ? eval(params[:abns]) : [] # :abns parameter is passed when clicking the "Export to Excel" link on the home page
-    # https://github.com/caxlsx/caxlsx_rails
-    respond_to do |format|
-      format.xlsx
-    end
-    # render xlsx: "ABN_export", disposition: 'inline'
+class TaskLoggerJob < ApplicationJob
+  # Abandoning this in favour of a worker class as defined in: https://itnext.io/sidekiq-overview-and-how-to-deploy-it-to-heroku-b8811fea9347
+  queue_as :default
+  # https://openclassrooms.com/en/courses/4567631-deploy-rails-applications/4794726-send-email-with-a-background-job
+  def perform(*args)
+    # https://www.bigbinary.com/learn-rubyonrails-book/background-job-processing-using-sidekiq
+    puts "TaskLoggerJob is performed"
   end
+  def self.email_job(email,splist,in_state,emailthreshold)
+    AbnMailer.email_abns( email,'', @allabns = abnlist(splist, in_state)).deliver_now if splist != [] && splist.size >= emailthreshold
+  end
+  # Adding helpers here because not accessible with helpers.function between enqueuing and processing
   def abnlist(list, in_state = "")
+    @allabns = [] if @allabns.nil?  # Probably doesn't exist yet, initialize here
   # def self.abnlist(list)
     list.map{|i| i = i[/\d+/] if i[/Owners|Trust/i] && i[/\d+/] # Long names including 'The Owners of...' are reduced to just numbers
       prefix_rgx = /^((SP|DP|UP|CTS|SC)|(Strata|Units?|Deposited|Community) *(Plan|Title( Scheme)?|Scheme)) *(?=\d)/i

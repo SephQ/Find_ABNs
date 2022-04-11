@@ -72,6 +72,25 @@ Rails.application.configure do
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
 
+  # SF 220411 - Email support for Heroku deploy
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.default_url_options = { 
+  # :host => '<your_url_here>', 
+  # :host => 'localhost:3000', # not sure what else to do on Heroku so just removing
+  :protocol => 'http'
+  }
+  config.action_mailer.smtp_settings = {
+  :address => 'smtp.gmail.com',
+  # :port => 601,
+  :port => 587,
+  :domain => "gmail.com", # SF 220411 https://stackoverflow.com/questions/25872389/rails-4-how-to-correctly-configure-smtp-settings-gmail
+  :user_name => ENV["GMAIL_USERNAME"], # "ses.abns@gmail.com"
+  :password => ENV["GMAIL_PW"],
+  # :authentication => 'plain',
+  :authentication => 'login', # SF 220411 https://stackoverflow.com/questions/25872389/rails-4-how-to-correctly-configure-smtp-settings-gmail
+  :enable_starttls_auto => true
+  }
+
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 

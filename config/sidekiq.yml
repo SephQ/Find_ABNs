@@ -1,0 +1,7 @@
+# https://www.bigbinary.com/learn-rubyonrails-book/background-job-processing-using-sidekiq
+development:
+  :concurrency: 1
+production:
+  :concurrency: 1
+:queues:
+  - default

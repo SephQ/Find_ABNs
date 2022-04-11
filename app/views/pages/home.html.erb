@@ -1,9 +1,10 @@
+<%# @allabns = [] if @allabns.nil? %>
 <section class="container">
   <p><%= image_tag 'SES_image_laptop.png' %></p>
   <p><h1>Find ABNs for a list of Strata Plans</h1></p>
   <p>Enter line-separated list of Strata Plan numbers (or CTS/UP/DP/SC numbers, building names etc.):</p>
   <%# <p>(Please be prepared to wait long periods to allow ABN searching of long lists. Do NOT press the button twice, the page will not react until the ABN search is done which could take ~5 minutes per 100 plans)</p> %>
-  <p>(Currently limited to about 8 rows at a time due to Heroku limitations. Please click once and then wait ~10 seconds per row of input for the page to reload.)</p>
+  <p>(If your list is longer than 9 rows, it will be emailed to you rather than served here on Heroku. Please click once and then wait ~10 seconds per row of input for the page to reload. Use state input to filter results down to a single state, if needed.)</p>
   <%# </br> %>
   <%= form_with method: :get do |f| %>
     <p>
@@ -13,6 +14,10 @@
     <p>
       <%= f.label 'Email for sending longer results:' %></p>
       <p><%= f.text_field :email, :value => @email, :size => 50 %>
+    </p>
+    <p>
+      <%= f.label 'State of interest (leave blank if multi-state):' %></p>
+      <p><%= f.text_field :state, :value => @state %>
     </p>
     <p>
         <%= f.submit 'Find ABNs' %>
@@ -26,7 +31,8 @@
   <% end %>
   <%# </br> %>
   <% p " home    view     @allabns  below ", @allabns %>
-  <p>Table will appear below once the page reloads after clicking 'Find ABNs'. Please be patient (up to 30 seconds of ABN searching before page reloads with output).</p>
+  <%# @allabns.select!{|name,abn,state,pc| state =~ /#{ @state }/i } unless @state == "" %>
+  <p>Table will appear below once the page reloads after clicking 'Find ABNs'. This table will not be filled if input is more than 9 rows (will be emailed instead). Please be patient (up to 30 seconds of ABN searching before page reloads with output).</p>
   <p><table><tbody><tr><th>Name</th><th class="ABN">ABN</th><th>State</th><th>Postcode</th></tr>
     <% @allabns.each do |r| %>
       <tr>
@@ -45,4 +51,4 @@
   <p>The above link allows you to export the table to Excel (once generated).</p>
 </section>
 <%# Really naive idea to avoid background job for long lists. Trying to get the last command in the view to organise emailing the results once the server completes the search for ABNs %>
-<% AbnMailer.email_abns( @email,'test email for ABN', abnlist(@splist)).deliver_now if @splist != [] && @splist.size >= 14 %>
+<%# AbnMailer.email_abns( @email,'test email for ABN', @allabns = abnlist(@splist, @state)).deliver_now if @splist != [] && @splist.size >= @emailthreshold %>

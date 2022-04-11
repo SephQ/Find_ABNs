@@ -3,14 +3,18 @@ class PagesController < ApplicationController
     # if params[:list] && params[:list] == "DONE"
     #   #Skip - already taken in data and have now finished getting ABNS into @allabns
     # else
+    @emailthreshold = 10    # If the input list is 14 sites or longer, results are emailed.
     @sptext = params[:list] ? params[:list] : ""
     @splist = @sptext.split(/[\r\n]+/)    # An array of line-separated strings from input
     @email = params[:email] && params[:email][/^[\w\.]+@[^\.]+\..+$/] ?
       params[:email] : "operations@strataenergyservices.com.au" # Use default email if none given or improper email given
+    @state = params[:state] && params[:state][/^(NSW|QLD|SA|NT|ACT|VIC|TAS|WA)$/i] ?
+      params[:state].upcase : "" # Use all states if none given or improper state given
     p @splist   # Print to stdout for debugging if errors occur.
     @url0 = "https://abr.business.gov.au/Search/ResultsActive?SearchText="
     @allabns = []
-    abnlist(@splist) if @splist != [] && @splist.size < 14    # If the list is too long, then we will email from within the view - after GETting the page first (to avoid Heroku timeouts)
+    p ['debug #SP,  SP =   ', @splist.size, @splist]
+    @allabns = helpers.abnlist(@splist, @state) if @splist != [] && @splist.size < @emailthreshold    # If the list is too long, then we will email from within the view - after GETting the page first (to avoid Heroku timeouts)
     # https://stackoverflow.com/questions/12956661/controller-action-to-delayed-job
     # PagesController.delay.abnlist(@splist) if @splist != []
     # https://github.com/caxlsx/caxlsx_rails
@@ -24,7 +28,10 @@ class PagesController < ApplicationController
 
     # Mailing tests
     # AbnMailer.welcome('sfreer@strataenergyservices.com.au','test email for sfreer ABN','').deliver_now
-    AbnMailer.email_abns( @email,'test email for ABN', @allabns).deliver_now if @allabns != [] && @splist.size < 14
+    # AbnMailer.email_abns( @email,'test email for ABN', @allabns).deliver_now if @allabns != [] && @splist.size >= @emailthreshold
+    # TaskLoggerJob.email_job(@email,@splist,@state,@emailthreshold)#.perform
+    # AbnMailer.email_abns( @email,'', @allabns = helpers.abnlist(@splist, @state)).deliver_now if @splist != [] && @splist.size >= @emailthreshold
+    AbnWorker.perform_async(@email,@splist,@state,@emailthreshold)
   end
   def index
     # https://medium.com/@igor_marques/exporting-data-to-a-xlsx-spreadsheet-on-rails-7322d1c2c0e7

@@ -29,6 +29,9 @@ module FindAbns
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
+    # https://www.bigbinary.com/learn-rubyonrails-book/background-job-processing-using-sidekiq
+    config.active_job.queue_adapter = :sidekiq
+
     # https://github.com/collectiveidea/delayed_job
     # config.active_job.queue_adapter = :delayed_job
   end
