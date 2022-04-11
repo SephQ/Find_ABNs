@@ -1,3 +1,4 @@
+@allabns = eval(params[:abns]) if @allabns.nil?
 wb = xlsx_package.workbook
 wb.add_worksheet(name: 'ABNs') do |sheet|
     bold = wb.styles.add_style( :b => true )

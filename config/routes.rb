@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   # root "articles#index"
   root "pages#home"
   get "ABN_export", to: "pages#ABN_export"
+  get "ABN_email", to: "pages#ABN_email"
   # resources :pages do
   #   post :export, on: :collection, as: :export
   # end

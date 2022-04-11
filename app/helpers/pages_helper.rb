@@ -8,6 +8,15 @@ module PagesHelper
     end
     # render xlsx: "ABN_export", disposition: 'inline'
   end
+  def ABN_email
+    # Doesn't seem to work here, even though ABN_export does. Says it needs to be in PagesController. Copying there.
+    # Link to optionally email manually (not the automated one for longer lists)
+    email = params[:email]
+    splist = params[:splist]
+    in_state = params[:state]
+    emailthreshold = 0      # No threshold, manual request
+    AbnWorker.perform_async(email, splist, in_state, emailthreshold)
+  end
   def abnlist(list, in_state = "")
   # def self.abnlist(list)
     list.map{|i| i = i[/\d+/] if i[/Owners|Trust/i] && i[/\d+/] # Long names including 'The Owners of...' are reduced to just numbers

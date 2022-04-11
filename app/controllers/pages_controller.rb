@@ -3,7 +3,7 @@ class PagesController < ApplicationController
     # if params[:list] && params[:list] == "DONE"
     #   #Skip - already taken in data and have now finished getting ABNS into @allabns
     # else
-    @emailthreshold = 10    # If the input list is 14 sites or longer, results are emailed.
+    @emailthreshold = 10    # If the input list is 10 sites or longer, results are emailed.
     @sptext = params[:list] ? params[:list] : ""
     @splist = @sptext.split(/[\r\n]+/)    # An array of line-separated strings from input
     @email = params[:email] && params[:email][/^[\w\.]+@[^\.]+\..+$/] ?
@@ -31,7 +31,21 @@ class PagesController < ApplicationController
     # AbnMailer.email_abns( @email,'test email for ABN', @allabns).deliver_now if @allabns != [] && @splist.size >= @emailthreshold
     # TaskLoggerJob.email_job(@email,@splist,@state,@emailthreshold)#.perform
     # AbnMailer.email_abns( @email,'', @allabns = helpers.abnlist(@splist, @state)).deliver_now if @splist != [] && @splist.size >= @emailthreshold
-    AbnWorker.perform_async(@email,@splist,@state,@emailthreshold)
+    AbnWorker.perform_async(@email,@splist,@state,@emailthreshold) if @splist.size >= @emailthreshold
+  end
+  def ABN_email
+    # Link to optionally email manually (not the automated one for longer lists)
+    email = params[:email]
+    if params[:splist]
+      splist = params[:splist]
+    else
+      @sptext = params[:list] ? params[:list] : ""
+      splist = @sptext.split(/[\r\n]+/)    # An array of line-separated strings from input
+    end
+    in_state = params[:state]
+    emailthreshold = 0      # No threshold, manual request
+    AbnWorker.perform_async(email, splist, in_state, emailthreshold)
+    redirect_to root_path(params.permit(:list,:email,:splist,:state,:emailthreshold,:abns,:commit)) # Take them back home with the params they had
   end
   def index
     # https://medium.com/@igor_marques/exporting-data-to-a-xlsx-spreadsheet-on-rails-7322d1c2c0e7

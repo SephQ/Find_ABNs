@@ -49,6 +49,8 @@
   <p><%#= link_to "Export ABNs as spreadsheet", root_path(export,format: "xlsx") %></p>
   <p><%#= link_to("Export ABNs as spreadsheet", :controller => "pages_controller", :action => "export") %></p>
   <p>The above link allows you to export the table to Excel (once generated).</p>
+  <p><%= link_to "Request email of ABNs", ABN_email_path(params.permit(:list,:email,:splist,:state,:emailthreshold,:abns,:commit)) %></p>
+  <p>The above link allows you to manually email the table to your chosen email, for small lists (this is automatic for long lists).</p>
 </section>
 <%# Really naive idea to avoid background job for long lists. Trying to get the last command in the view to organise emailing the results once the server completes the search for ABNs %>
 <%# AbnMailer.email_abns( @email,'test email for ABN', @allabns = abnlist(@splist, @state)).deliver_now if @splist != [] && @splist.size >= @emailthreshold %>
