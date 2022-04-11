@@ -77,6 +77,7 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { 
   # :host => '<your_url_here>', 
   # :host => 'localhost:3000', # not sure what else to do on Heroku so just removing
+  :host => 'smtp.gmail.com',  # SF 220411 trying this for heroku
   :protocol => 'http'
   }
   config.action_mailer.smtp_settings = {
