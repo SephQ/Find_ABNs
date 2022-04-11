@@ -3,7 +3,7 @@ class PagesController < ApplicationController
     # if params[:list] && params[:list] == "DONE"
     #   #Skip - already taken in data and have now finished getting ABNS into @allabns
     # else
-    @emailthreshold = 10    # If the input list is 10 sites or longer, results are emailed.
+    @emailthreshold = 21    # If the input list is 21 sites or longer, results are emailed.
     @sptext = params[:list] ? params[:list] : ""
     @splist = @sptext.split(/[\r\n]+/)    # An array of line-separated strings from input
     @email = params[:email] && params[:email][/^[\w\.]+@[^\.]+\..+$/] ?
@@ -11,6 +11,9 @@ class PagesController < ApplicationController
     @state = params[:state] && params[:state][/^(NSW|QLD|SA|NT|ACT|VIC|TAS|WA)$/i] ?
       params[:state].upcase : "" # Use all states if none given or improper state given
     p @splist   # Print to stdout for debugging if errors occur.
+    
+    @email_sent = !!(params[:commit] && @splist.size >= @emailthreshold)  # Email was sent. Need to tell user to wait, not re-submit
+    
     @url0 = "https://abr.business.gov.au/Search/ResultsActive?SearchText="
     @allabns = []
     p ['debug #SP,  SP =   ', @splist.size, @splist]

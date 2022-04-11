@@ -4,7 +4,7 @@
   <p><h1>Find ABNs for a list of Strata Plans</h1></p>
   <p>Enter line-separated list of Strata Plan numbers (or CTS/UP/DP/SC numbers, building names etc.):</p>
   <%# <p>(Please be prepared to wait long periods to allow ABN searching of long lists. Do NOT press the button twice, the page will not react until the ABN search is done which could take ~5 minutes per 100 plans)</p> %>
-  <p>(If your list is longer than 9 rows, it will be emailed to you rather than served here on Heroku. Please click once and then wait ~10 seconds per row of input for the page to reload. Use state input to filter results down to a single state, if needed.)</p>
+  <p>(If your list is longer than <%= @emailthreshold - 1 %> rows, it will be emailed to you rather than served here on Heroku. Please click once and then wait ~10 seconds per row of input for the page to reload. Use state input to filter results down to a single state, if needed.)</p>
   <%# </br> %>
   <%= form_with method: :get do |f| %>
     <p>
@@ -32,25 +32,31 @@
   <%# </br> %>
   <% p " home    view     @allabns  below ", @allabns %>
   <%# @allabns.select!{|name,abn,state,pc| state =~ /#{ @state }/i } unless @state == "" %>
-  <p>Table will appear below once the page reloads after clicking 'Find ABNs'. This table will not be filled if input is more than 9 rows (will be emailed instead). Please be patient (up to 30 seconds of ABN searching before page reloads with output).</p>
-  <p><table><tbody><tr><th>Name</th><th class="ABN">ABN</th><th>State</th><th>Postcode</th></tr>
-    <% @allabns.each do |r| %>
-      <tr>
-        <% r.each.with_index do |c,i| %>
-          <%# <td><%= c > </td> %>
-          <td><%= i != 1 ? c : link_to(c, "https://abr.business.gov.au/ABN/View?id=#{ c.gsub(' ','') }", :target => "_blank") %></td>
-        <% end %>
-      </tr>
-    <% end %>
-  </tbody></table></p>
-  </br>
-  <p>ABNs are hyperlinked to their ABR page. If you want to select the whole ABN as text, triple-click the space after the number.</p>
-  <p><%= link_to "Export ABNs as spreadsheet", ABN_export_path(format: "xlsx", abns: @allabns.to_s ) %></p>
-  <p><%#= link_to "Export ABNs as spreadsheet", root_path(export,format: "xlsx") %></p>
-  <p><%#= link_to("Export ABNs as spreadsheet", :controller => "pages_controller", :action => "export") %></p>
-  <p>The above link allows you to export the table to Excel (once generated).</p>
-  <p><%= link_to "Request email of ABNs", ABN_email_path(params.permit(:list,:email,:splist,:state,:emailthreshold,:abns,:commit)) %></p>
-  <p>The above link allows you to manually email the table to your chosen email, for small lists (this is automatic for long lists).</p>
+  <% if @email_sent %>
+    <%# Show a warning to user that they have now submitted their request and an email is coming %>
+    <h3>ABNs are being searched now and an email will be sent to your requested address shortly with the results.</h3>
+    <p>Feel free to close this window. Check your junk folder if email isn't in your inbox in 2-3 minutes. Sender is SES.ABNs@gmail.com, please refrain from re-submitting without waiting at least 2-3 minutes for the email.</p>
+  <% else %>
+    <p>Table will appear below once the page reloads after clicking 'Find ABNs' (if less than <%= @emailthreshold - 1 %> rows ).</p>
+    <p><table><tbody><tr><th>Name</th><th class="ABN">ABN</th><th>State</th><th>Postcode</th></tr>
+      <% @allabns.each do |r| %>
+        <tr>
+          <% r.each.with_index do |c,i| %>
+            <%# <td><%= c > </td> %>
+            <td><%= i != 1 ? c : link_to(c, "https://abr.business.gov.au/ABN/View?id=#{ c.gsub(' ','') }", :target => "_blank") %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody></table></p>
+    </br>
+    <p>ABNs are hyperlinked to their ABR page. If you want to select the whole ABN as text, triple-click the space after the number.</p>
+    <p><%= link_to "Export ABNs as spreadsheet", ABN_export_path(format: "xlsx", abns: @allabns.to_s ) %></p>
+    <p><%#= link_to "Export ABNs as spreadsheet", root_path(export,format: "xlsx") %></p>
+    <p><%#= link_to("Export ABNs as spreadsheet", :controller => "pages_controller", :action => "export") %></p>
+    <p>The above link allows you to export the table to Excel (once generated).</p>
+    <p><%= link_to "Request email of ABNs", ABN_email_path(params.permit(:list,:email,:splist,:state,:emailthreshold,:abns,:commit)) %></p>
+    <p>The above link allows you to manually email the table to your chosen email, for small lists (this is automatic for long lists).</p>
+  <% end %>
 </section>
 <%# Really naive idea to avoid background job for long lists. Trying to get the last command in the view to organise emailing the results once the server completes the search for ABNs %>
 <%# AbnMailer.email_abns( @email,'test email for ABN', @allabns = abnlist(@splist, @state)).deliver_now if @splist != [] && @splist.size >= @emailthreshold %>
