@@ -6,8 +6,11 @@ class PagesController < ApplicationController
     @emailthreshold = 21    # If the input list is 21 sites or longer, results are emailed.
     @sptext = params[:list] ? params[:list] : ""
     @splist = @sptext.split(/[\r\n]+/)    # An array of line-separated strings from input
+    @splist = @splist.uniq.select{|i| i[/\S/] } # ignore the duplicates and blank lines (waste of http requests)
     @email = params[:email] && params[:email][/^[\w\.]+@[^\.]+\..+$/] ?
       params[:email] : "operations@strataenergyservices.com.au" # Use default email if none given or improper email given
+    @filename = params[:filename] && params[:filename][/^[\w\- ]+$$/] ?
+      params[:filename] : "ABN_export" # Use default filename if none given or improper filename given
     @state = params[:state] && params[:state][/^(NSW|QLD|SA|NT|ACT|VIC|TAS|WA)$/i] ?
       params[:state].upcase : "" # Use all states if none given or improper state given
     p @splist   # Print to stdout for debugging if errors occur.
@@ -34,7 +37,7 @@ class PagesController < ApplicationController
     # AbnMailer.email_abns( @email,'test email for ABN', @allabns).deliver_now if @allabns != [] && @splist.size >= @emailthreshold
     # TaskLoggerJob.email_job(@email,@splist,@state,@emailthreshold)#.perform
     # AbnMailer.email_abns( @email,'', @allabns = helpers.abnlist(@splist, @state)).deliver_now if @splist != [] && @splist.size >= @emailthreshold
-    AbnWorker.perform_async(@email,@splist,@state,@emailthreshold) if @splist.size >= @emailthreshold
+    AbnWorker.perform_async(@email,@filename,@splist,@state,@emailthreshold) if @splist.size >= @emailthreshold
   end
   def ABN_email
     # Link to optionally email manually (not the automated one for longer lists)
@@ -46,18 +49,25 @@ class PagesController < ApplicationController
       splist = @sptext.split(/[\r\n]+/)    # An array of line-separated strings from input
     end
     in_state = params[:state]
+    filename = params[:filename] ? params[:filename] : "ABN_export"
     emailthreshold = 0      # No threshold, manual request
-    AbnWorker.perform_async(email, splist, in_state, emailthreshold)
-    redirect_to root_path(params.permit(:list,:email,:splist,:state,:emailthreshold,:abns,:commit)) # Take them back home with the params they had
+    AbnWorker.perform_async(email, filename, splist, in_state, emailthreshold)
+    redirect_to root_path(params.permit(:list,:email,:splist,:state,:emailthreshold,:abns,:commit,:filename)) # Take them back home with the params they had
   end
   def index
     # https://medium.com/@igor_marques/exporting-data-to-a-xlsx-spreadsheet-on-rails-7322d1c2c0e7
-    @users =  User.all
+    @users = User.all
 
     respond_to do |format|
       format.html
       format.xlsx
     end
+  end
+  def dummyemail
+    # Debugging test. Send a dummyemail without background job and include the environment it was sent in
+    prod = Rails.env.production? ? 'Production' : 'Local/Development'
+    p prod
+    AbnMailer.email_test('sfreer@strataenergyservices.com.au',"", "Test email sent in #{prod} for debugging.").deliver_now
   end
   # Commenting these out and moving them all to pages_helper.rb since they are helper methods really
   # def ABN_export
