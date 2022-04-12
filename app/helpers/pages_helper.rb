@@ -55,6 +55,7 @@ module PagesHelper
       return @allabns
   end
   def abnfetch(url)
+    maxpersite = 5    # Maximum number of ABN results to pull for any site row
     res = URI.open(url).read  # HTML of all results
     inp = Nokogiri::HTML(res).search('input') # All <input ...> tags
     @abns = []
@@ -69,7 +70,7 @@ module PagesHelper
     # out = @abns.select!{_1&&_1[0]&&_1[0][/(?<!\d)#{@num}(?!\d)/]}
     # @allabns += @abns # SF 220412 - becoming more strict, no partial digit matches 10581 !=~ 1058
     rawnum = @num[/\d+/]
-    @allabns += @abns.select!{_1&&_1[0]&&_1[0][/(?<!\d)#{rawnum}(?!\d)/]}
+    @allabns += @abns.select!{_1&&_1[0]&&_1[0][/(?<!\d)#{rawnum}(?!\d)/]}[0...maxpersite]
     @abns
   end
 end
