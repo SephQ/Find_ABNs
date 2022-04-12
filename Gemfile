@@ -25,8 +25,9 @@ gem "stimulus-rails"
 gem "jbuilder"
 
 # Use Redis adapter to run Action Cable in production
-gem "redis", "~> 4.0"   # SF 220412 - just uncommented this, not sure why it was commented out but now I need redis v4.0 or higher :
+gem "redis"#, "~> 4.0"   # SF 220412 - just uncommented this, not sure why it was commented out but now I need redis v4.0 or higher :
 # Heroku error to fix: app[abnworker.1]: pid=4 tid=2vg WARN: RuntimeError: You are connecting to Redis v3.2.12, Sidekiq requires Redis v4.0.0 or greater
+# Turns out RedisToGo uses v3.2.12 and can't upgrade. Trying to keep Sidekiq below v6 to satisfy now, but may go to "Heroku Redis" instead.
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -69,7 +70,7 @@ gem 'caxlsx_rails'
 
 # Linux development 220410: Adding background jobs/sidekiq
 # https://www.bigbinary.com/learn-rubyonrails-book/background-job-processing-using-sidekiq
-gem 'sidekiq'
+gem 'sidekiq', "~> 5.2"
 
 # https://serveanswer.com/questions/heroku-router-at-error-code-h10-desc-app-crashed-method
 # Fixing Heroku app crashed error with bootsnap
