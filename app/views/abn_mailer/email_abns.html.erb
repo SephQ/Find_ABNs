@@ -12,7 +12,8 @@ Suite 1.02, Level 1, 6 Eden Park Drive Macquarie Park NSW 2113</p>
       <tr>
         <% r.each.with_index do |c,i| %>
           <%# <td><%= c > </td> %>
-          <td><%= i != 1 ? c : link_to(c, "https://abr.business.gov.au/ABN/View?id=#{ c.gsub(' ','') }", :target => "_blank") %></td>
+          <% url = c[/^htt/] ? c : "https://abr.business.gov.au/ABN/View?id=#{ c.gsub(' ','') }" %>
+          <td><%= (i != 1 ? c : link_to(c, url, :target => "_blank"))  unless c.nil? %></td>
         <% end %>
       </tr>
     <% end %>
