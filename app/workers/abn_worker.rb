@@ -4,7 +4,7 @@ class AbnWorker
   # https://itnext.io/sidekiq-overview-and-how-to-deploy-it-to-heroku-b8811fea9347
   def perform(email,filename="ABN_export",splist,in_state,emailthreshold)
     @url0 = "https://abr.business.gov.au/Search/ResultsActive?SearchText="
-    AbnMailer.email_abns( email,filename @allabns = abnlist(splist, in_state)).deliver_now if splist != [] && splist.size >= emailthreshold
+    AbnMailer.email_abns( email,filename, @allabns = abnlist(splist, in_state)).deliver_now if splist != [] && splist.size >= emailthreshold
   end
   def self.email_job(email,splist,in_state,emailthreshold)
     # Old attempt from task_logger_job.rb
