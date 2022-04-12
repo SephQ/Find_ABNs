@@ -20,8 +20,8 @@ module PagesHelper
   def abnlist(list, in_state = "")
   # def self.abnlist(list)
     list.map{|i| i = i[/\d+(?=\D*$)/] if i[/Owners|Trust/i] && i[/\d+/] # Long names including 'The Owners of...' are reduced to just numbers
-      prefix_rgx = /^.*?((SP|DP|UP|CTS|SC)|(Strata|Units?|Deposited|Community) *(Plan|Title( Scheme)?|Scheme)) *(?=\d)/i
-      suffix_rgx = /^\d+\K.*$/i
+      prefix_rgx = /^.*?((SP|DP|UP|CTS|SC|BC|OCP|BCPO?|OCSP|PS|RP)|(Strata|Units?|Deposited|Community) *(Plan|Title( Scheme)?|Scheme)) *(?=\d)/i
+      suffix_rgx = /^\d+\S*\K.*$/i
       @num = i.gsub(prefix_rgx, '')   # Remove prefixes to get just the number (if it's in one of the above formats)
       @num = @num.gsub(suffix_rgx, '') if i[prefix_rgx] # Remove suffixes after the number (if it matches a prefix format)
       p [i,@num,@url0]
@@ -31,6 +31,10 @@ module PagesHelper
       if i[/SP|STRATA|S P /i]
         url2 = @url0 + (@num[/DP|UP/] ? @num.gsub(/DP|UP/,'') : 'SP' + @num)
         url4 = @url0 + (@num[/DP|UP/] ? @num.gsub(/DP|UP/){($&[?D]? 'DEPOSITED': 'UNIT') + 'PLAN'} : 'STRATAPLAN' + @num)
+      else
+        # If it's not an SP/UP/DP but it is mostly numbers with a few letters, try it without the letters.
+        rawnum = @num[/\d+/]
+        url2 = @url0 + rawnum if @num.size != @num.scan(/\d/).size && @num.scan(/\d/).size > @num.size/2
       end
       url3 = @url0 + 'PLAN' + @num if i[/Plan|P(?= *\d)/i]  # only search PLAN{number} if original name implies a plan
         ## .compact will remove the nils (url2, url4) if the site isn't a Strata Plan (saves time).
