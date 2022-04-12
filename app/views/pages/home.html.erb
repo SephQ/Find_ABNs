@@ -59,9 +59,8 @@
     </br>
     <% if params[:commit] %>
       <%# If a list was submitted but no email sent, then show these extra tips. %>
-      <% if @email_sent %>
-        <p>Rows with only links in their search query couldn't be matched to any results by our code. Manual search may be needed.</p>
-      <% else %>
+      <p>Rows with only links in their ABN box couldn't be matched to any results by our code. Manual search may be needed (or the plan may not have an ABN).</p>
+      <% if !@email_sent %>
         <p>ABNs are hyperlinked to their ABR page. If you want to select the whole ABN as text, triple-click the space after the number.</p>
         <p><%= link_to "Export ABNs as spreadsheet", ABN_export_path(format: "xlsx", abns: @allabns.to_s ) %></p>
         <p><%#= link_to "Export ABNs as spreadsheet", root_path(export,format: "xlsx") %></p>
