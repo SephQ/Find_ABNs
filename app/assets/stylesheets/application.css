@@ -118,7 +118,10 @@
  }
  th {
    font-weight: bold;
-   min-width: 110px;
+   min-width: 80px;
+ }
+ .wide {
+   min-width: 300px;
  }
  
  /* .abn {
@@ -146,7 +149,8 @@
 
 td a:link, td a:visited {
   /* background-color: #f44336; */
-  color: rgb(0, 0, 0);
+  color: rgb(0, 0, 100);
+  /* color: darkblue; */
   /* padding: 14px 25px; */
   /* text-align: center; = baaaaad! */
   text-decoration: none;
@@ -154,12 +158,14 @@ td a:link, td a:visited {
 }
  
  a:hover, a:active {
-   /* background-color: red; */
+  /* background-color: cyan; */
+   /* color: darkblue; */
  }
  a:visited {
    /* color: rgb(249, 85, 255); */
-   text-decoration: none;
    /* background-color: cyan; */
+   text-decoration: none;
+   /* color: darkblue; */
  }
 
  .whitetext{

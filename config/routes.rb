@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get "ABN_export", to: "pages#ABN_export"
   get "ABN_email", to: "pages#ABN_email"
   get "dummyemail", to: "pages#dummyemail"
+  post "/", to: "pages#home"
   # resources :pages do
   #   post :export, on: :collection, as: :export
   # end

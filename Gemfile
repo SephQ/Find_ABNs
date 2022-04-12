@@ -70,7 +70,7 @@ gem 'caxlsx_rails'
 
 # Linux development 220410: Adding background jobs/sidekiq
 # https://www.bigbinary.com/learn-rubyonrails-book/background-job-processing-using-sidekiq
-gem 'sidekiq', "~> 5.2"
+gem 'sidekiq', '~> 5.2.8' 
 
 # https://serveanswer.com/questions/heroku-router-at-error-code-h10-desc-app-crashed-method
 # Fixing Heroku app crashed error with bootsnap

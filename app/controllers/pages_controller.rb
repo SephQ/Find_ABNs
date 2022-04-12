@@ -40,7 +40,7 @@ class PagesController < ApplicationController
     filename = params[:filename] ? params[:filename] : "ABN_export"
     emailthreshold = 0      # No threshold, manual request
     AbnWorker.perform_async(email, filename, splist, in_state, emailthreshold)
-    redirect_to root_path(params.permit(:list,:email,:splist,:state,:emailthreshold,:abns,:commit,:filename)) # Take them back home with the params they had
+    redirect_to root_path(params.permit(:list,:email,:splist,:state,:emailthreshold,:abns,:commit,:filename,:authenticity_token)) # Take them back home with the params they had
   end
   def index
     # https://medium.com/@igor_marques/exporting-data-to-a-xlsx-spreadsheet-on-rails-7322d1c2c0e7
