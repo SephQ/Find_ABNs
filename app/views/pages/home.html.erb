@@ -47,8 +47,8 @@
         <tr>
           <% r.each.with_index do |c,i| %>
             <%# <td><%= c > </td> %>
-            <td><%= i != 1 ? c : link_to(c, "https://abr.business.gov.au/ABN/View?id=#{ c.gsub(' ','') }", :target => "_blank") %></td>
-          <% end %>
+            <td><%= (i != 1 ? c : link_to(c, "https://abr.business.gov.au/ABN/View?id=#{ c.gsub(' ','') }", :target => "_blank"))  unless c.nil? %></td>
+          <% end unless r.none? %>
         </tr>
       <% end %>
     </tbody></table></p>

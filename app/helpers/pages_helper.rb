@@ -19,9 +19,11 @@ module PagesHelper
   end
   def abnlist(list, in_state = "")
   # def self.abnlist(list)
-    list.map{|i| i = i[/\d+/] if i[/Owners|Trust/i] && i[/\d+/] # Long names including 'The Owners of...' are reduced to just numbers
-      prefix_rgx = /^((SP|DP|UP|CTS|SC)|(Strata|Units?|Deposited|Community) *(Plan|Title( Scheme)?|Scheme)) *(?=\d)/i
+    list.map{|i| i = i[/\d+(?=\D*$)/] if i[/Owners|Trust/i] && i[/\d+/] # Long names including 'The Owners of...' are reduced to just numbers
+      prefix_rgx = /^.*?((SP|DP|UP|CTS|SC)|(Strata|Units?|Deposited|Community) *(Plan|Title( Scheme)?|Scheme)) *(?=\d)/i
+      suffix_rgx = /^\d+\K.*$/i
       @num = i.gsub(prefix_rgx, '')   # Remove prefixes to get just the number (if it's in one of the above formats)
+      @num = @num.gsub(suffix_rgx, '') if i[prefix_rgx] # Remove suffixes after the number (if it matches a prefix format)
       p [i,@num,@url0]
       url2, url3, url4 = nil, nil, nil  # Initialize as nil (means won't be checked unless re-defined below)
       # url is searching for the basic number. url2 searches SP{number}, url3 = PLAN{number}, url4 = STRATAPLAN{number} 
@@ -32,6 +34,7 @@ module PagesHelper
       end
       url3 = @url0 + 'PLAN' + @num if i[/Plan|P(?= *\d)/i]  # only search PLAN{number} if original name implies a plan
         ## .compact will remove the nils (url2, url4) if the site isn't a Strata Plan (saves time).
+      p '|| || || || url1-4 vvv || || || ||', [url,url2,url3,url4]
       [url,url2,url3,url4].compact.find{ abnfetch(_1) != [] } # .find( ... != [] ) means stop once any of these formats give a non-empty result
       # SF 220412 - better idea here is to not let abnfetch change @allabns, do it below instead. Then if abnfetch returns nothing for
       # a site, we can put an empty row in its place with the SP number as the first column to show that this one had no results.
