@@ -11,4 +11,4 @@ Sentry.init do |config|
   config.traces_sampler = lambda do |context|
     true
   end
-end
+end if defined?(Sentry)

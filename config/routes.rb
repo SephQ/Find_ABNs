@@ -14,6 +14,18 @@ Rails.application.routes.draw do
   resources :pages, only: [:index, :export, :dummyemail]
   if defined?(Sidekiq) && defined?(Sidekiq::Web)
     # From https://www.youtube.com/watch?v=5wwhmgGZJbI - Sidekiq Web UI
-    mount Sidekiq::Web => "/sidekiq"
+    # mount Sidekiq::Web => "/sidekiq"
+
+    # https://www.aloucaslabs.com/miniposts/how-to-add-basic-http-authentication-to-sidekiq-ui-mounted-on-a-rails-application
+    # Monitoring
+    scope :monitoring do
+      # Sidekiq Basic Auth from routes on production environment
+      Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+        ActiveSupport::SecurityUtils.secure_compare(::Digest::SHA256.hexdigest(username), ::Digest::SHA256.hexdigest(ENV["SIDEKIQ_USERNAME"])) &
+          ActiveSupport::SecurityUtils.secure_compare(::Digest::SHA256.hexdigest(password), ::Digest::SHA256.hexdigest(ENV["SIDEKIQ_PW"]))
+      end if Rails.env.production?
+
+      mount Sidekiq::Web, at: '/sidekiq'
+    end
   end
 end
