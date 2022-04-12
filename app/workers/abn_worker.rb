@@ -62,7 +62,8 @@ class AbnWorker
     # p @abns
     # out = @abns.select!{_1&&_1[0]&&_1[0][/(?<!\d)#{@num}(?!\d)/]}
     # @allabns += @abns # SF 220412 - becoming more strict, no partial digit matches 10581 !=~ 1058
-    @allabns += @abns.select!{_1&&_1[0]&&_1[0][/(?<!\d)#{@num}(?!\d)/]}
+    rawnum = @num[/\d+/]
+    @allabns += @abns.select!{_1&&_1[0]&&_1[0][/(?<!\d)#{rawnum}(?!\d)/]}
     @abns
   end
 end
