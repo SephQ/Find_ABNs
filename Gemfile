@@ -70,6 +70,10 @@ gem 'caxlsx_rails'
 # https://www.bigbinary.com/learn-rubyonrails-book/background-job-processing-using-sidekiq
 gem 'sidekiq'
 
+# https://sentry.io/organizations/findabns/projects/findabns/getting-started/ruby-rails/
+gem "sentry-ruby"
+gem "sentry-rails"
+
 # https://serveanswer.com/questions/heroku-router-at-error-code-h10-desc-app-crashed-method
 # Fixing Heroku app crashed error with bootsnap
 # gem 'net-smtp', require: false
@@ -104,7 +108,4 @@ end
 
 group :production do
   gem "pg"
-  # https://sentry.io/organizations/findabns/projects/findabns/getting-started/ruby-rails/
-  gem "sentry-ruby"
-  gem "sentry-rails"
 end

@@ -12,4 +12,8 @@ Rails.application.routes.draw do
   # end
   # https://medium.com/@galejscott/lead-me-up-the-rails-path-2d0b924e485
   resources :pages, only: [:index, :export, :dummyemail]
+  if defined?(Sidekiq) && defined?(Sidekiq::Web)
+    # From https://www.youtube.com/watch?v=5wwhmgGZJbI - Sidekiq Web UI
+    mount Sidekiq::Web => "/sidekiq"
+  end
 end
