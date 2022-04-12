@@ -94,6 +94,7 @@ group :development do
   # gem "spring"
 end
 
+
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
@@ -103,4 +104,7 @@ end
 
 group :production do
   gem "pg"
+  # https://sentry.io/organizations/findabns/projects/findabns/getting-started/ruby-rails/
+  gem "sentry-ruby"
+  gem "sentry-rails"
 end
