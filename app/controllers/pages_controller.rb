@@ -3,7 +3,7 @@ class PagesController < ApplicationController
     # if params[:list] && params[:list] == "DONE"
     #   #Skip - already taken in data and have now finished getting ABNS into @allabns
     # else
-    @emailthreshold = 11    # If the input list is 11 sites or longer, results are emailed.
+    @emailthreshold = 6    # If the input list is 6 sites or longer, results are emailed.
     @sptext = params[:list] ? params[:list] : ""
     @splist = @sptext.split(/[\r\n]+/)    # An array of line-separated strings from input
     @splist = @splist.uniq.select{|i| i[/\S/] } # ignore the duplicates and blank lines (waste of http requests)

@@ -11,7 +11,7 @@
   <%= form_with method: :post do |f| %>
     <p>
         <%= f.label 'Building List:' %><br>
-        <%= f.text_area :list, size: "80x20", :value => @sptext %><%# 20, now 8 because of heroku timeouts meaning 8 rows is max. %>
+        <%= f.text_area :list, size: "80x10", :value => @sptext %><%# 20, now 8 because of heroku timeouts meaning 8 rows is max. %>
     </p>
     <p>
       <%= f.label 'State of interest (leave blank if multi-state):' %></p>
