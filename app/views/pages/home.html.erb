@@ -4,7 +4,7 @@
   <p><h1>Find ABNs for a list of Strata Plans</h1></p>
   <p>Enter line-separated list of Strata Plan numbers (or CTS/UP/DP/SC numbers, building names etc.):</p>
   <%# <p>(Please be prepared to wait long periods to allow ABN searching of long lists. Do NOT press the button twice, the page will not react until the ABN search is done which could take ~5 minutes per 100 plans)</p> %>
-  <p>(If your list is longer than <%= @emailthreshold - 1 %> rows, it will be emailed to you rather than served here on Heroku. Please click once and then wait ~5 seconds per row of input for the page to reload. Use state input to filter results down to a single state, if needed.)</p>
+  <p>(If your list is longer than <%= @emailthreshold - 1 %> rows, it will be emailed to you rather than served here on Heroku. Please click once and then wait ~5 seconds per row of input for the page to reload. Use the state input to filter results down to a single state, if needed.)</p>
   <% #<p>Maximum rows ~ 1000 (10240 characters)</p> # no max now, changed to POST instead of GET%>
   <%# </br> %>
   <%#= form_with method: :get do |f| %>
