@@ -94,22 +94,6 @@ Rails.application.configure do
   # # }
   config.action_mailer.perform_deliveries = true
 
-  # Outlook attempt
-  # https://www.workthecode.com/tutorials/send-email-via-office-365-exchange-online-from-actionmailer-in-rails/
-  # WARNING: The email address the mailer sends from must match the email address used in the ActionMailer configuration's user_name field. If this doesn't match, the message will be rejected by the Exchange Online SMTP service.
-  # Net::ReadTimeout with #<Socket:(closed)> -> added ssl: true, # https://www.redmine.org/boards/1/topics/46305
-  # SSL_connect returned=1 errno=0 peeraddr=52.98.14.146:587 state=error: wrong version number -> give up
-  # config.action_mailer.smtp_settings = {
-  #   address:              "smtp.office365.com",
-  #   port:                 587,
-  #   domain:               "strataenergyservices.com.au",
-  #   ssl: true,       # Added to fix Net::ReadTimeout https://www.redmine.org/boards/1/topics/46305
-  #   user_name:            "sfreer@strataenergyservices.com.au",
-  #   password:             "Mi!!Q122",
-  #   authentication:       :login,
-  #   enable_starttls_auto: true
-  # }
-  # config.action_mailer.delivery_method = :smtp
   config.action_mailer.raise_delivery_errors = true # Temporary
 
   # Raises error for missing translations.
